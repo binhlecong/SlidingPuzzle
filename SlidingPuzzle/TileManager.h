@@ -6,21 +6,26 @@
 
 class SlidingTile;
 
+#define UP    1
+#define RIGHT 2
+#define DOWN  3
+#define LEFT  4
+
 class TileManager
 {
 public:
 	TileManager() = default;
 	TileManager(const char* fileName, int imgSizeX, int imgSizeY, int widthNum, int heightNum);
 	void addTiles();
+	void swapTiles(int dir);
+	void shuffleTiles();
 	void drawTiles();
 	~TileManager();
-	std::pair<int, int> emptyTile;
-
+	
 	int widthSize, heightSize;
 	int imgSizeX, imgSizeY;
-	SDL_Texture* texture;
 	const char* filePath;
-	std::vector<SlidingTile> tiles;
-	//std::map<int, SlidingTile> tiles;
-};
 
+	SlidingTile* emptyTile;
+	std::vector<SlidingTile> tiles;
+};
