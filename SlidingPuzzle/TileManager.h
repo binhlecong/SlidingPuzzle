@@ -2,7 +2,7 @@
 #include "SlidingTile.h"
 #include "TextureManager.h"
 #include <vector>
-#include <map>
+#include <algorithm>
 
 class SlidingTile;
 

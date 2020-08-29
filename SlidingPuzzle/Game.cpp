@@ -8,8 +8,7 @@ SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
 bool Game::isRunning;
 
-//SDL_Texture* background;
-TileManager manager("Asset/numberBoard.png", 800, 800, 5, 5);
+TileManager manager("Asset/Rhythmastic.png", 468, 468, 4, 4);
 
 Game::Game()
 {
@@ -104,8 +103,6 @@ void Game::update()
 void Game::render()
 {
 	SDL_RenderClear(Game::renderer);
-	/*SDL_Rect src = { 0, 0, 800, 800 }, des = { 0, 0, 800, 800 };
-	TextureManager::draw(background, src, des, SDL_FLIP_NONE);*/
 	manager.drawTiles();
 	SDL_RenderPresent(Game::renderer);
 }

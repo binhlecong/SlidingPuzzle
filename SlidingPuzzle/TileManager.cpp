@@ -3,6 +3,7 @@
 TileManager::TileManager(const char* fileName, int imgX, int imgY, int widthNum, int heightNum)
 	:filePath(fileName), imgSizeX(imgX), imgSizeY(imgY), widthSize(widthNum), heightSize(heightNum)
 {
+	emptyTile = NULL;
 }
 
 TileManager::~TileManager()
@@ -32,7 +33,7 @@ void TileManager::addTiles()
 			des.y = tileHeight * y;
 			des.w = tileWidth;
 			des.h = tileHeight;
-			id = y * heightSize + x;
+			id = y * widthSize + x;
 
 			tiles.push_back(SlidingTile(src, des, x, y, id, filePath));
 		}
@@ -44,8 +45,8 @@ void TileManager::addTiles()
 	src.w = src.h = 20;
 	src.x = src.y = 40;
 
-	des.x = tileWidth * tileWidth;
-	des.y = tileHeight * tileHeight;
+	des.x = tileWidth * (widthSize - 1);
+	des.y = tileHeight * (heightSize - 1);
 	des.w = tileWidth;
 	des.h = tileHeight;
 	id = widthSize * heightSize - 1;
@@ -55,7 +56,7 @@ void TileManager::addTiles()
 
 void TileManager::shuffleTiles()
 {
-	for (size_t i = 0; i < 50; i++)
+	for (size_t i = 0; i < 100; i++)
 	{
 		int direction = rand() % 4 + 1;
 		swapTiles(direction);
@@ -65,57 +66,62 @@ void TileManager::shuffleTiles()
 void TileManager::swapTiles(int dir)
 {
 	int emptyX, emptyY;
-	emptyX = emptyTile->posTrue.first;
-	emptyY = emptyTile->posTrue.second;
-	std::pair<int, int> selectedTile;
+	emptyX = emptyTile->curPos.first;
+	emptyY = emptyTile->curPos.second;
+
+	int selectedX, selectedY;
+	selectedX = selectedY = 0;
 
 	switch (dir)
 	{
 	case UP:
-		selectedTile.first = emptyX;
-		selectedTile.second = emptyY + 1;
-		selectedTile.second = std::min(selectedTile.second, heightSize - 1);
-		emptyTile->posTrue.second = selectedTile.second;
+		selectedX = emptyX;
+		selectedY = emptyY + 1;
+		selectedY = std::min(selectedY, heightSize - 1);
 		break;
 
 	case LEFT:
-		selectedTile.first = emptyX + 1;
-		selectedTile.second = emptyY;
-		selectedTile.first = std::min(selectedTile.first, widthSize - 1);
-		emptyTile->posTrue.first = selectedTile.first;
+		selectedX = emptyX + 1;
+		selectedY = emptyY;
+		selectedX = std::min(selectedX, widthSize - 1);
 		break;
 
 	case DOWN:
-		selectedTile.first = emptyX;
-		selectedTile.second = emptyY - 1;
-		selectedTile.second = std::max(selectedTile.second, 0);
-		emptyTile->posTrue.second = selectedTile.second;
+		selectedX = emptyX;
+		selectedY = emptyY - 1;
+		selectedY = std::max(selectedY, 0);
 		break;
 
 	case RIGHT:
-		selectedTile.first = emptyX - 1;
-		selectedTile.second = emptyY;
-		selectedTile.first = std::max(selectedTile.first, 0);
-		emptyTile->posTrue.first = selectedTile.first;
+		selectedX = emptyX - 1;
+		selectedY = emptyY;
+		selectedX = std::max(selectedX, 0);
 		break;
 
 	default:
 		break;
 	}
 
-	std::swap(tiles[selectedTile.second * widthSize
-		+ selectedTile.first].srcRect,
+	std::swap(tiles[selectedY * widthSize
+		+ selectedX].srcRect,
 		tiles[emptyY * widthSize
 		+ emptyX].srcRect);
 
-	emptyTile->desRect 
-		= tiles[selectedTile.second * widthSize + selectedTile.first].desRect;
+	std::swap(tiles[selectedY * widthSize
+		+ selectedX].curPos,
+		tiles[emptyY * widthSize
+		+ emptyX].curPos);
 
-	if (emptyTile->posTrue.first == 0)
+	emptyTile->desRect 
+		= tiles[selectedY * widthSize + selectedX].desRect;
+	emptyTile->curPos
+		= tiles[selectedY * widthSize + selectedX].truePos;
+
+	if (emptyTile->curPos.first == 0)
 	{
 		emptyTile->srcRect.x = 0;
 	}
-	else if (emptyTile->posTrue.first == widthSize - 1)
+	else if (emptyTile->curPos.first == widthSize - 1)
 	{
 		emptyTile->srcRect.x = 40;
 	}
@@ -124,11 +130,11 @@ void TileManager::swapTiles(int dir)
 		emptyTile->srcRect.x = 20;
 	}
 
-	if (emptyTile->posTrue.second == 0)
+	if (emptyTile->curPos.second == 0)
 	{
 		emptyTile->srcRect.y = 0;
 	}
-	else if (emptyTile->posTrue.second == widthSize - 1)
+	else if (emptyTile->curPos.second == widthSize - 1)
 	{
 		emptyTile->srcRect.y = 40;
 	}

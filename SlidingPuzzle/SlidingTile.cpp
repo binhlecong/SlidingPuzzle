@@ -7,9 +7,11 @@ SlidingTile::SlidingTile(SDL_Rect _srcRect, SDL_Rect _desRect, int xtrue, int yt
 	tileRect = { 0,0,200,200 };
 	srcRect = _srcRect;
 	desRect = _desRect;
-	posTrue.first = xtrue;
-	posTrue.second = ytrue;
-	id = id;
+	curPos.first = xtrue;
+	truePos.first = xtrue;
+	curPos.second = ytrue;
+	truePos.second = ytrue;
+	this->id = id;
 }
 
 SlidingTile::~SlidingTile()

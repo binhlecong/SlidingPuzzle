@@ -15,6 +15,7 @@ public:
 	SDL_Rect tileRect;
 	SDL_Texture* texture;
 	SDL_Rect srcRect, desRect;
-	std::pair<int, int> posTrue;
+	std::pair<int, int> truePos;
+	std::pair<int, int> curPos;
 	int id;
 };
