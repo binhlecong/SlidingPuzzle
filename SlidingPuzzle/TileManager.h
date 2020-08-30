@@ -3,6 +3,7 @@
 #include "TextureManager.h"
 #include <vector>
 #include <algorithm>
+#include <time.h>
 
 class SlidingTile;
 
@@ -16,11 +17,13 @@ class TileManager
 public:
 	TileManager() = default;
 	TileManager(const char* fileName, int imgSizeX, int imgSizeY, int widthNum, int heightNum);
+	~TileManager();
+
 	void addTiles();
 	void swapTiles(int dir);
 	void shuffleTiles();
 	void drawTiles();
-	~TileManager();
+	bool isSolved();
 	
 	int widthSize, heightSize;
 	int imgSizeX, imgSizeY;

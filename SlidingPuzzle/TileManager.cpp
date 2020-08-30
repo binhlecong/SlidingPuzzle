@@ -56,6 +56,7 @@ void TileManager::addTiles()
 
 void TileManager::shuffleTiles()
 {
+	srand(time(NULL));
 	for (size_t i = 0; i < 100; i++)
 	{
 		int direction = rand() % 4 + 1;
@@ -134,7 +135,7 @@ void TileManager::swapTiles(int dir)
 	{
 		emptyTile->srcRect.y = 0;
 	}
-	else if (emptyTile->curPos.second == widthSize - 1)
+	else if (emptyTile->curPos.second == heightSize - 1)
 	{
 		emptyTile->srcRect.y = 40;
 	}
@@ -154,4 +155,16 @@ void TileManager::drawTiles()
 
 	// draw arrows on the empty tile
 	emptyTile->drawTile();
+}
+
+bool TileManager::isSolved()
+{
+	for  (auto& t : tiles)
+	{
+		if (t.curPos != t.truePos)
+		{
+			return false;
+		}
+	}
+	return true;
 }

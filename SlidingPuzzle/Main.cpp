@@ -3,6 +3,7 @@
 #endif
 #define _CRT_SECURE_NO_WARNINGS 1
 #include "Game.h"
+#include "UILabel.h"
 
 int main(int agrc, char* argv[])
 {
@@ -30,7 +31,16 @@ int main(int agrc, char* argv[])
 		else std::cout << "!!! FPS drop" << std::endl;
 	}
 
-	game->clean();
+	UILabel gameText; 
+	gameText.setText("YOU\n WIN I LOVE YOU SO MUCH", 0, 0, 50, { 255, 255, 0, 255 });
 
-	return 0;
+	SDL_RenderClear(Game::renderer);
+	gameText.draw();
+	SDL_RenderPresent(Game::renderer);
+
+	SDL_Delay(3000);
+
+	game->clean();
+	
+	return EXIT_SUCCESS;
 }

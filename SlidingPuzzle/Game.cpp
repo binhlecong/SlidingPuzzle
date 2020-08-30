@@ -2,19 +2,21 @@
 #include "TextureManager.h"
 #include "TileManager.h"
 #include "SlidingTile.h"
+#include "UILabel.h"
 #include <algorithm>
 
 SDL_Renderer* Game::renderer;
 SDL_Event Game::event;
 bool Game::isRunning;
 
-TileManager manager("Asset/Rhythmastic.png", 468, 468, 4, 4);
+TileManager manager("Asset/Rhythmastic.png", 468, 468, 2, 2);
 
 Game::Game()
 {
 	count = 0;
 	window = NULL;
 	renderer = NULL;
+	isSolved = false;
 }
 
 Game::~Game() {}
@@ -48,6 +50,14 @@ void Game::init(const char* title, int x, int y, int width, int height, bool ful
 	}
 	else
 	{
+		std::cout << "!!! Error : SDL" << std::endl;
+		isRunning = false;
+		isSolved = true;
+	}
+
+	if (TTF_Init() == -1)
+	{
+		std::cout << "!!! Error : SDL_TTF" << std::endl;
 		isRunning = false;
 	}
 
@@ -63,11 +73,13 @@ void Game::handleEvent()
 	{
 		isRunning = false;
 	}
+
+	isSolved = manager.isSolved();
 }
 
 void Game::update()
 {
-	if (Game::event.type == SDL_KEYDOWN)
+	if (Game::event.type == SDL_KEYDOWN && !isSolved)
 	{
 		int direction = 0;
 		switch (Game::event.key.keysym.sym)
@@ -103,7 +115,17 @@ void Game::update()
 void Game::render()
 {
 	SDL_RenderClear(Game::renderer);
-	manager.drawTiles();
+
+	if(isSolved)
+	{
+		std::cout << "Solved" << std::endl;
+		isRunning = false;
+	}
+	else
+	{
+		manager.drawTiles();
+	}
+	
 	SDL_RenderPresent(Game::renderer);
 }
 
@@ -112,5 +134,6 @@ void Game::clean()
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();
+	TTF_Quit();
 	std::cout << "<<< Game cleared..." << std::endl;
 }

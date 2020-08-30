@@ -29,6 +29,7 @@ public:
 
 private:
 	int count = 0;
+	bool isSolved;
 	// need use pointers
 	SDL_Window* window;
 };
